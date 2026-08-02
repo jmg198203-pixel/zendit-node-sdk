@@ -1,0 +1,89 @@
+openapi: 3.0.3
+info:
+  title: Sovereign Trust OS Identity API
+  description: "Identity, authentication, authorization, and governance services."
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/jennifermariegarciar-a85/IdentityApi/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: https://api.yourdomain.com/identity/v1
+tags:
+- name: Authentication
+- name: Users
+- name: Organizations
+- name: Roles
+- name: Audit
+paths:
+  /auth/register:
+    post:
+      tags:
+      - Authentication
+      summary: Create identity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreate"
+        required: true
+      responses:
+        "201":
+          description: Identity created
+  /auth/login:
+    post:
+      tags:
+      - Authentication
+      summary: Authenticate user
+      responses:
+        "200":
+          description: JWT issued
+  /auth/refresh:
+    post:
+      tags:
+      - Authentication
+      summary: Refresh token
+  /users/{userId}:
+    get:
+      tags:
+      - Users
+      summary: Retrieve identity profile
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: User profile
+  /roles:
+    get:
+      tags:
+      - Roles
+      summary: List RBAC roles
+  /audit/events:
+    get:
+      tags:
+      - Audit
+      summary: Identity audit trail
+components:
+  schemas:
+    UserCreate:
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        tenantId:
+          type: string
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
